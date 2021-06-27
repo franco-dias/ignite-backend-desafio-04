@@ -6,10 +6,15 @@ interface IRequest {
 }
 
 class ListAllUsersUseCase {
-  constructor(private usersRepository: IUsersRepository) {}
+  constructor(private usersRepository: IUsersRepository) { }
 
   execute({ user_id }: IRequest): User[] {
-    // Complete aqui
+    const requestingUser = this.usersRepository.findById(user_id);
+    if (!requestingUser || !requestingUser.admin) {
+      throw new Error("You don't have permission to access this endpoint.");
+    }
+    const users = this.usersRepository.list();
+    return users;
   }
 }
 
